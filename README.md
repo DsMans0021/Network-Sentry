@@ -1,18 +1,17 @@
 # Network Sentry
-
 ![Application Icon](icon.png)
 
-A comprehensive Network Monitoring and Security Scanning Tool for network administrators and cybersecurity enthusiasts. Network Sentry provides real-time device discovery, tracking, and alerting through an intuitive CLI interface.
+A tool that helps you keep an eye on everything connected to your network. Network Sentry discovers devices, tracks them, and alerts you when something new shows up. It's designed to be easy to use, even if you're not a networking expert.
 
-## Features
+## What Can It Do?
 
-- **Network Scanning**: ARP-based device discovery with concurrent scanning for speed
-- **Device Tracking**: Persistent storage of discovered devices with connection history
-- **Vendor Identification**: Automatic manufacturer lookup from MAC addresses using OUI database
-- **Alert System**: Real-time notifications for new devices and network events
-- **Continuous Monitoring**: Automated scanning at configurable intervals
-- **Reporting**: Export device data to CSV or JSON formats
-- **Cross-Platform**: Works on Windows, Linux, and macOS
+- Find devices on your network automatically
+- Keep a record of which devices have connected to your network
+- Identify what brand made each device
+- Get alerts when new devices appear
+- Check your network regularly without manual work
+- Save device info as reports (CSV or JSON)
+- Works on Windows, Mac, and Linux
 
 ## Project Structure
 
@@ -33,31 +32,31 @@ network_sentry/
     └── helpers.py        # Helper functions
 ```
 
-## Installation
+## Getting Started
 
-### Prerequisites
+### What You Need
 
-- Python 3.8 or higher
-- Administrator/root privileges (required for raw socket operations)
+- Python 3.8 or newer
+- Admin or root access on your computer (needed to scan the network)
 
-### Setup
+### Installation
 
-1. Clone or download the project:
+1. Download or clone the project and go into the folder:
 ```bash
 cd network_sentry
 ```
 
-2. Install dependencies:
+2. Install what the app needs:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Run the application (requires admin/root):
+3. Run the app (you'll need admin rights):
 ```bash
-# On Linux/macOS
+# On Mac or Linux
 sudo python main.py
 
-# On Windows (run as Administrator)
+# On Windows (run Command Prompt as Administrator)
 python main.py
 ```
 
@@ -72,147 +71,104 @@ Watch the YouTube tutorial for a detailed walkthrough:
 
 ## Usage
 
-### Main Menu
+## How to Use It
 
-Network Sentry provides an interactive CLI with the following options:
+When you start the app, you'll see a simple menu with these options:
 
-1. **Scan Network Now** - Perform an immediate network scan
-2. **View All Devices** - Display all devices in the database
-3. **View Unknown Devices** - Show devices not marked as known
-4. **Mark Device as Known** - Mark a device as trusted
-5. **Start Continuous Monitoring** - Enable automated scanning
-6. **View Alert History** - Review past alerts
-7. **Export Report** - Export data to CSV or JSON
-8. **Settings** - Configure alert preferences
-9. **Exit** - Close the application
+1. **Scan Network Now** - Look for devices right now
+2. **View All Devices** - See everything you've found
+3. **View Unknown Devices** - See new devices you haven't marked as safe
+4. **Mark Device as Known** - Tell the app a device is supposed to be there
+5. **Start Continuous Monitoring** - Let it check for new devices automatically
+6. **View Alert History** - See past notifications
+7. **Export Report** - Save your device list as a file
+8. **Settings** - Change how alerts work
+9. **Exit** - Close the app
 
-### Example Usage
+Just number what you want to do and press Enter.
 
-```bash
-$ sudo python main.py
+## Settings
 
-╔════════════════════════════════════════════════════════════╗
-║                                                              ║
-║                    NETWORK SENTRY                            ║
-║              Network Monitoring & Security Tool              ║
-║                                                              ║
-║           Monitoring Your Network 24/7                      ║
-║                                                              ║
-╚════════════════════════════════════════════════════════════╝
+You can change how the app works by editing `config.py`:
 
-Main Menu
-==================================================
-1. Scan Network Now
-2. View All Devices
-3. View Unknown Devices
-4. Mark Device as Known
-5. Start Continuous Monitoring
-6. View Alert History
-7. Export Report (CSV/JSON)
-8. Settings
-9. Exit
-==================================================
-
-Enter your choice (1-9): 1
-
-[*] Network Scan
-==================================================
-
-[*] Scanning network: 192.168.1.0/24
-[*] This may take a moment...
-
-[+] Found 5 device(s):
-
-+--------------+-------------------+----------------+----------------+
-| IP Address   | MAC Address       | Hostname       | Vendor         |
-+--------------+-------------------+----------------+----------------+
-| 192.168.1.1  | AA:BB:CC:DD:EE:FF | router.local   | Cisco Systems  |
-| 192.168.1.100| 11:22:33:44:55:66 | laptop-john    | Apple Inc.     |
-+--------------+-------------------+----------------+----------------+
-```
-
-## Configuration
-
-Configuration settings are stored in `config.py`:
-
-- **Database Path**: `network_sentry.db` (SQLite)
-- **Scan Interval**: 300 seconds (5 minutes)
-- **Log File**: `network_sentry.log`
-- **Max Threads**: 50 (for concurrent scanning)
-- **Alert Settings**: Configurable via Settings menu
+- **Database**: Where device info is stored (`network_sentry.db`)
+- **Scan Interval**: How often to check (default: 5 minutes)
+- **Log File**: Where activity is recorded (`network_sentry.log`)
+- **Max Threads**: Controls speed (default: 50)
+- **Alerts**: Customize what kind of alerts you get
 
 ## Alert Types
 
-- **NEW_DEVICE**: Unknown device detected on the network (Red)
-- **KNOWN_DEVICE_RETURNED**: Known device reconnected (Green)
-- **SUSPICIOUS_ACTIVITY**: Potential security anomaly (Yellow)
+- **NEW_DEVICE**: A device you haven't seen before is on your network
+- **KNOWN_DEVICE_RETURNED**: A device you marked as safe is back
+- **SUSPICIOUS_ACTIVITY**: Something unusual happened on your network
 
-## Database Schema
+## How Data is Organized
 
-### Devices Table
-- `id` - Primary key
-- `ip_address` - Device IP address (unique)
-- `mac_address` - Device MAC address
-- `hostname` - Resolved hostname
-- `first_seen` - First detection timestamp
-- `last_seen` - Last detection timestamp
-- `is_known` - Known device flag
-- `vendor` - Device manufacturer
+### Devices
+The app stores this info about each device:
+- IP address (the device's network ID)
+- MAC address (the device's hardware ID)
+- Hostname (device name if available)
+- When you first saw it
+- When you last saw it
+- If it's marked as safe
+- What brand/manufacturer it is
 
-### Alerts Table
-- `id` - Primary key
-- `device_id` - Foreign key to devices
-- `alert_type` - Type of alert
-- `message` - Alert message
-- `timestamp` - Alert timestamp
+### Alerts
+Each alert is recorded with:
+- Which device triggered it
+- What kind of alert it is
+- Custom message
+- When it happened
 
-## Security Considerations
+## Important Info
 
-- **Permissions**: Requires administrator/root privileges for raw socket operations
-- **Educational Use**: Intended for authorized network monitoring only
-- **Privacy**: Respects network privacy; no malicious packet injection
-- **Passive Mode**: ARP scanning is passive and non-intrusive
+- **You Need Admin Access**: Requires special permissions to scan networks
+- **Legal Use Only**: Only use this to monitor networks you own or have permission to monitor
+- **Safe Scanning**: This tool just looks, it doesn't mess with the network
+- **Passive**: Uses listening-only methods, no intrusive scanning
 
-## Troubleshooting
+## Having Problems?
 
-### Permission Denied Errors
-- Run with sudo on Linux/macOS
-- Run as Administrator on Windows
-- Ensure firewall allows the application
+### I get permission errors
+- Mac/Linux: Make sure you use `sudo` when running the app
+- Windows: Run the Command Prompt as Administrator
+- Check your firewall isn't blocking the app
 
-### No Devices Found
-- Check network interface configuration
-- Verify you're on the correct network
-- Ensure devices are powered on and connected
+### No devices are showing up
+- Double-check your network setup
+- Make sure you're on the right network
+- Check that devices are actually plugged in and turned on
 
-### Import Errors
-- Ensure all dependencies are installed: `pip install -r requirements.txt`
-- Check Python version (3.8+ required)
+### Import errors or missing packages
+- Run this command again: `pip install -r requirements.txt`
+- Make sure you're using Python 3.8 or newer
 
-## Dependencies
+## What Powers Network Sentry
 
-- `scapy` - Packet manipulation and network scanning
-- `python-nmap` - Network discovery
-- `colorama` - Cross-platform colored terminal text
-- `netifaces` - Network interface enumeration
-- `tabulate` - Pretty-print tabular data
-- `mac-vendor-lookup` - MAC address OUI lookup
+- `scapy` - Tools for working with network packets
+- `python-nmap` - Finding devices on networks
+- `colorama` - Colors in the terminal
+- `netifaces` - Reads network info
+- `tabulate` - Makes nice tables to display info
+- `mac-vendor-lookup` - Looks up device brands
 
 ## License
 
-This project is provided for educational and authorized network monitoring purposes only.
+This project is for learning and monitoring your own network. Please use it responsibly.
 
-## Contributing
+## Sharing Improvements
 
-Contributions are welcome! Please ensure:
-- Code follows existing style
-- All functions have docstrings
-- Error handling is comprehensive
-- Changes are tested on multiple platforms
+Found a bug or want to add features? We'd love your help! Just make sure:
+- Your code is clean and easy to follow
+- Functions have comments explaining what they do
+- You handle errors properly
+- Test it on different operating systems
 
-## Disclaimer
+## Warning
 
-Network Sentry is intended for legitimate network monitoring and security auditing on networks you own or have explicit permission to monitor. Unauthorized network scanning may be illegal in your jurisdiction. Use responsibly.
+Use Network Sentry only on networks you own or have permission to monitor. Scanning someone else's network without permission might be illegal where you live. Be responsible with this tool.
 
 ## Whoami
 >_Made With ❤️ by DsMans0021
