@@ -1,5 +1,7 @@
 # Network Sentry
 
+![Application Icon](icon.png)
+
 A comprehensive Network Monitoring and Security Scanning Tool for network administrators and cybersecurity enthusiasts. Network Sentry provides real-time device discovery, tracking, and alerting through an intuitive CLI interface.
 
 ## Features
@@ -58,6 +60,15 @@ sudo python main.py
 # On Windows (run as Administrator)
 python main.py
 ```
+
+## Tutorial
+
+Watch the YouTube tutorial for a detailed walkthrough:
+[Network Sentry YouTube Tutorial](https://youtu.be/3NvYwcGC570)
+
+## Screenshots
+
+![Network Sentry](Network%20Sentry.png)
 
 ## Usage
 

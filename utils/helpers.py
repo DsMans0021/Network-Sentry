@@ -7,8 +7,21 @@ from datetime import datetime
 from typing import Optional, Tuple
 import sys
 from pathlib import Path
+from colorama import Fore, Style
 sys.path.append(str(Path(__file__).parent.parent))
 from config import Config
+
+banner = f"""
+{Fore.CYAN}
+====================================================
+                                                    
+         NETWORK SENTRY v1.0 by DsMans0021                     
+                                                    
+   Advanced Network Monitoring & Protection Tool   
+                                                    
+====================================================
+{Style.RESET_ALL}
+"""
 
 def validate_ip(ip_address: str) -> bool:
     pattern = r'^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$'

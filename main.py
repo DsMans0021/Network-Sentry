@@ -23,6 +23,22 @@ from tabulate import tabulate
 
 init(autoreset=True)
 
+menu = f"""
+{Fore.CYAN}======================================{Style.RESET_ALL}
+{Fore.CYAN}      Network Sentry - Main Menu      {Style.RESET_ALL}
+{Fore.CYAN}======================================{Style.RESET_ALL}
+
+{Fore.GREEN}1. Run Network Scan{Style.RESET_ALL}
+{Fore.GREEN}2. View All Devices{Style.RESET_ALL}
+{Fore.GREEN}3. View Unknown Devices{Style.RESET_ALL}
+{Fore.GREEN}4. Mark Device as Known{Style.RESET_ALL}
+{Fore.GREEN}5. Continuous Monitoring{Style.RESET_ALL}
+{Fore.GREEN}6. View Alert History{Style.RESET_ALL}
+{Fore.GREEN}7. Export Report{Style.RESET_ALL}
+{Fore.GREEN}8. Settings{Style.RESET_ALL}
+{Fore.RED}9. Exit{Style.RESET_ALL}
+"""
+
 class NetworkSentryApp:
     
     def __init__(self):

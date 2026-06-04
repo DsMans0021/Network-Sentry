@@ -37,6 +37,26 @@ class DatabaseManager:
         conn = self._get_connection()
         cursor = conn.cursor()
 
+        cursor.execute('''CREATE TABLE IF NOT EXISTS devices (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ip_address TEXT UNIQUE NOT NULL,
+            mac_address TEXT NOT NULL,
+            hostname TEXT,
+            vendor TEXT,
+            first_seen TEXT NOT NULL,
+            last_seen TEXT NOT NULL,
+            is_known INTEGER DEFAULT 0
+        )''')
+        
+        cursor.execute('''CREATE TABLE IF NOT EXISTS alerts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            device_id INTEGER,
+            alert_type TEXT NOT NULL,
+            message TEXT,
+            timestamp TEXT NOT NULL,
+            FOREIGN KEY (device_id) REFERENCES devices(id)
+        )''')
+
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_mac ON devices(mac_address)')
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_ip ON devices(ip_address)')
         cursor.execute('CREATE INDEX IF NOT EXISTS idx_known ON devices(is_known)')
@@ -51,6 +71,9 @@ class DatabaseManager:
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
         try:
+            cursor.execute('''INSERT INTO devices (ip_address, mac_address, hostname, vendor, first_seen, last_seen, is_known)
+                            VALUES (?, ?, ?, ?, ?, ?, 0)''',
+                          (ip, mac, hostname, vendor, timestamp, timestamp))
             conn.commit()
             return cursor.lastrowid
         except sqlite3.IntegrityError:
@@ -76,7 +99,9 @@ class DatabaseManager:
             params.append(vendor)
         
         params.append(ip)
-
+        
+        update_query = f"UPDATE devices SET {', '.join(updates)} WHERE ip_address = ?"
+        cursor.execute(update_query, params)
         conn.commit()
         
         cursor.execute('SELECT id FROM devices WHERE ip_address = ?', (ip,))
@@ -86,7 +111,8 @@ class DatabaseManager:
     def get_all_devices(self) -> List[Dict]:
         conn = self._get_connection()
         cursor = conn.cursor()
-
+        
+        cursor.execute('SELECT * FROM devices')
         devices = []
         for row in cursor.fetchall():
             devices.append({
@@ -105,7 +131,8 @@ class DatabaseManager:
     def get_unknown_devices(self) -> List[Dict]:
         conn = self._get_connection()
         cursor = conn.cursor()
-
+        
+        cursor.execute('SELECT * FROM devices WHERE is_known = 0')
         devices = []
         for row in cursor.fetchall():
             devices.append({
@@ -124,14 +151,16 @@ class DatabaseManager:
     def mark_as_known(self, mac_address: str) -> bool:
         conn = self._get_connection()
         cursor = conn.cursor()
-
+        
+        cursor.execute('UPDATE devices SET is_known = 1 WHERE mac_address = ?', (mac_address,))
         conn.commit()
         return cursor.rowcount > 0
     
     def get_device_by_mac(self, mac_address: str) -> Optional[Dict]:
         conn = self._get_connection()
         cursor = conn.cursor()
-
+        
+        cursor.execute('SELECT * FROM devices WHERE mac_address = ?', (mac_address,))
         row = cursor.fetchone()
         if row:
             return {
@@ -178,14 +207,23 @@ class DatabaseManager:
         cursor = conn.cursor()
         
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
+        
+        cursor.execute('''INSERT INTO alerts (device_id, alert_type, message, timestamp)
+                         VALUES (?, ?, ?, ?)''',
+                      (device_id, alert_type, message, timestamp))
         conn.commit()
         return cursor.lastrowid
     
     def get_alert_history(self, limit: int = 100) -> List[Dict]:
         conn = self._get_connection()
         cursor = conn.cursor()
-
+        
+        cursor.execute('''SELECT a.id, a.alert_type, a.message, a.timestamp,
+                                 d.ip_address, d.mac_address, d.hostname
+                          FROM alerts a
+                          LEFT JOIN devices d ON a.device_id = d.id
+                          ORDER BY a.timestamp DESC
+                          LIMIT ?''', (limit,))
         alerts = []
         for row in cursor.fetchall():
             alerts.append({
@@ -203,7 +241,9 @@ class DatabaseManager:
     def cleanup_old_devices(self, days: int = 30) -> int:
         conn = self._get_connection()
         cursor = conn.cursor()
-
+        
+        cursor.execute('''DELETE FROM devices 
+                         WHERE last_seen < datetime('now', '-' || ? || ' days')''', (days,))
         conn.commit()
         return cursor.rowcount
     
