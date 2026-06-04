@@ -172,5 +172,12 @@ Found a bug or want to add features? We'd love your help! Just make sure:
 
 Use Network Sentry only on networks you own or have permission to monitor. Scanning someone else's network without permission might be illegal where you live. Be responsible with this tool.
 
+## AI role in the project
+
+- Ideas
+- Exapmles
+- Tutorials
+- Good word choosing
+
 ## Whoami
->_Made With ❤️ by DsMans0021
+>_Made With ❤️ by DsMans0021 & some help from the AI
