@@ -3,6 +3,8 @@
 
 A tool that helps you keep an eye on everything connected to your network. Network Sentry discovers devices, tracks them, and alerts you when something new shows up. It's designed to be easy to use, even if you're not a networking expert.
 
+## Download from here: https://raw.githubusercontent.com/DsMans0021/Network-Sentry/main/released%20v1.0/NetworkSentry.exe
+
 ## What Can It Do?
 
 - Find devices on your network automatically
