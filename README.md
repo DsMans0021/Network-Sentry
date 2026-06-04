@@ -59,6 +59,11 @@ sudo python main.py
 python main.py
 ```
 
+## Tutorial
+
+Watch the YouTube tutorial for a detailed walkthrough:
+[Network Sentry YouTube Tutorial](https://youtu.be/3NvYwcGC570)
+
 ## Usage
 
 ### Main Menu
